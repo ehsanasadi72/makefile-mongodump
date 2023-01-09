@@ -1,14 +1,34 @@
 #!/bin/sh
 HOST='127.0.0.1'
-USER='test'
-PASSWD='test'
-FILE='/home/test/Downloads/image.jpg'
+USER=''
+PASSWD=''
 
-ftp -n $HOST <<END_SCRIPT
+if ! command vsftpd -v 
+then
+    sudo apt-get install vsftpd 
+    sudo systemctl start vsftpd.service
+
+fi
+if  ! grep -q write_enabled=YES /etc/vsftpd.conf; then
+    echo 'write_enabled=YES' | sudo tee --append /etc/vsftpd.conf 
+    sudo systemctl restart vsftpd.service
+fi
+
+if ! [ -d "../dump" ]
+then
+    echo 'Cant find dump dir'
+    exit
+else
+    cd ../dump
+fi
+
+
+ftp -n $HOST  <<END_SCRIP
 quote USER $USER
 quote PASS $PASSWD
 binary
-put $FILE
+prompt
+mput *
 quit
 END_SCRIPT
-exit 0
+exit 0 

@@ -7,6 +7,6 @@ dump:
 	 --authenticationDatabase admin -d $(DBNAME) --collection $(COLLCECTION) --authenticationMechanism=SCRAM-SHA-1 --gzip 
 
 ftp:
-	$(shell ./ftp.sh)
+	. ./ftp.sh
 	
 	
